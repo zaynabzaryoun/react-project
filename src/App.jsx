@@ -1,24 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [value, setValue] = useState({ id: 0, title: "" });
+  const [task, setTask] = useState({ id: 0, title: "", completed: false });
   const [list, setList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newTask = { id: value.id + 1, title: value.title };
+    const newTask = {
+      id: task.id + 1,
+      title: task.title,
+      completed: task.completed,
+    };
     if (!isEditing) {
       setList([...list, newTask]);
-      setValue({ id: newTask.id, title: "" });
+      setTask({ id: newTask.id, title: "" });
     } else {
       setList(
         list.map((task) =>
-          task.id === editId ? { ...task, title: value.title } : task
+          task.id === editId ? { ...task, title: newTask.title } : task
         )
       );
     }
@@ -26,24 +28,18 @@ function App() {
     setEditId(null);
   };
 
-  // useEffect(() => {
-  //   console.log("value:", value);
-  //   console.log("list", list);
-  // }, [list, value]);
-
   const handleEdit = (id) => {
     const editedTask = list.find((task) => task.id === id);
     if (editedTask) {
-      setValue({ id: editedTask.id, title: editedTask.title });
+      setTask({ id: editedTask.id, title: editedTask.title });
       setIsEditing(true);
       setEditId(id);
     }
-    // console.log(id);
-    // console.log(newTitle);
   };
 
-  const handleDelete = () => {
-    console.log("delete");
+  const handleDelete = (id) => {
+    const filteredlist = list.filter((task) => task.id !== id);
+    setList(filteredlist);
   };
 
   return (
@@ -51,10 +47,10 @@ function App() {
       <h1>hello</h1>
       <form onSubmit={handleSubmit}>
         <input
-          value={value.title}
+          value={task.title}
           onChange={(e) => {
-            setValue({
-              ...value,
+            setTask({
+              ...task,
               title: e.target.value,
             });
           }}
@@ -64,9 +60,17 @@ function App() {
       <ul>
         {list.map((task) => (
           <li key={task.id}>
+            <input
+              type="checkbox"
+              onChange={() => console.log(task.completed)}
+              checked={task.completed}
+              style={{
+                textDecoration: task.completed ? "line-throught" : "none",
+              }}
+            />
             {task.title}{" "}
             <button onClick={() => handleEdit(task.id)}>edit</button>
-            <button onClick={handleDelete}>delete</button>
+            <button onClick={() => handleDelete(task.id)}>delete</button>
           </li>
         ))}
       </ul>
@@ -74,4 +78,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
