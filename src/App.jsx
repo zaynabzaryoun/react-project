@@ -120,7 +120,7 @@ function App() {
         className="flex flex-col gap-5 w-9/12 md:w-4/12 "
       >
         <input
-          className="w-full sm:w-72 text-white bg-dark rounded py-2 px-1"
+          className="w-full sm: w-72 text-white bg-dark rounded py-2 px-1"
           value={task.title}
           onChange={(e) => {
             setTask({
