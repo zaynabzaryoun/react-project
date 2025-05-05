@@ -2,7 +2,10 @@
 
 @theme {
     --color-primary: #283618;
-    --color-dark-purple: #150c25;
-    --color-medium-purple: #1f1137;
-    --color-light-purple: #3e236e;
+    /* --color-dark-blue: #323a45; */
+    --color-medium-blue: #3f6184;
+    --color-dark: #323a45;
+    --color-light-blue: #5faeb6;
+    --color-light: #a8abab;
+
 }

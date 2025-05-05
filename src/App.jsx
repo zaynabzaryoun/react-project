@@ -2,11 +2,18 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 function App() {
-  const [task, setTask] = useState({ id: 0, title: "", completed: false, dueDate: "", description: "", priority: "low" });
+  const [task, setTask] = useState({
+    id: 0,
+    title: "",
+    completed: false,
+    dueDate: "",
+    description: "",
+    priority: "low",
+  });
   const [list, setList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [select, setSelect] = useState("all")
+  const [select, setSelect] = useState("all");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,14 +27,34 @@ function App() {
     };
     if (!isEditing) {
       setList([...list, newTask]);
-      setTask({ id: newTask.id, title: "", dueDate: "", description: "", priority: "low" });
+      setTask({
+        id: newTask.id,
+        title: "",
+        dueDate: "",
+        description: "",
+        priority: "low",
+      });
     } else {
       setList(
         list.map((task) =>
-          task.id === editId ? { ...task, title: newTask.title, dueDate: newTask.dueDate, description: newTask.description, priority: task.priority } : task
+          task.id === editId
+            ? {
+                ...task,
+                title: newTask.title,
+                dueDate: newTask.dueDate,
+                description: newTask.description,
+                priority: task.priority,
+              }
+            : task
         )
       );
-      setTask({ id: newTask.id, title: "", dueDate: "", description: "", priority: "low" });
+      setTask({
+        id: newTask.id,
+        title: "",
+        dueDate: "",
+        description: "",
+        priority: "low",
+      });
     }
     setIsEditing(false);
     setEditId(null);
@@ -36,7 +63,12 @@ function App() {
   const handleEdit = (id) => {
     const editedTask = list.find((task) => task.id === id);
     if (editedTask) {
-      setTask({ id: editedTask.id, title: editedTask.title, dueDate: editedTask.dueDate, description: editedTask.description });
+      setTask({
+        id: editedTask.id,
+        title: editedTask.title,
+        dueDate: editedTask.dueDate,
+        description: editedTask.description,
+      });
       setIsEditing(true);
       setEditId(id);
     }
@@ -49,26 +81,46 @@ function App() {
 
   let selectedList;
   if (select === "all") {
-     selectedList = [...list]
+    selectedList = [...list];
   } else if (select === "completed") {
-     selectedList = list.filter(task => task.completed === true)
+    selectedList = list.filter((task) => task.completed === true);
   } else if (select === "uncompleted") {
-     selectedList = list.filter(task => task.completed === false)
+    selectedList = list.filter((task) => task.completed === false);
   }
-  
+
   return (
-    <div className="min-h-screen flex justify-center items-center flex-col gap-20 bg-dark-purple">
-      <h1 className="text-white">Todo List</h1>
-      <section className="flex item-center gap-20">
-        <label htmlFor="select" className="text-white">Filter the List</label>
-        <select className="text-white" name="select" id="select" value={select} onChange={e => setSelect(e.target.value)}>
-          <option value="all" className="text-white">All Task</option>
-          <option value="completed">Completed</option>
-          <option value="uncompleted">Uncompleted</option>
+    <section className="min-h-screen flex items-center flex-col gap-10 pt-20 bg-medium-blue">
+      <h1 className="text-white font-bold text-2xl sm:text-3xl md:text-4xl">
+        Todo List
+      </h1>
+      <section className="flex item-center gap-10">
+        <label htmlFor="select" className="text-white">
+          Filter the List
+        </label>
+        <select
+          className="text-white border rounded"
+          name="select"
+          id="select"
+          value={select}
+          onChange={(e) => setSelect(e.target.value)}
+        >
+          <option value="all" className="text-white bg-dark">
+            All Task
+          </option>
+          <option value="completed" className="text-white bg-dark">
+            Completed
+          </option>
+          <option value="uncompleted" className="text-white bg-dark">
+            Uncompleted
+          </option>
         </select>
       </section>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-5 w-9/12 md:w-4/12 "
+      >
         <input
+          className="w-full sm:w-72 text-white bg-dark rounded py-2 px-1"
           value={task.title}
           onChange={(e) => {
             setTask({
@@ -76,46 +128,123 @@ function App() {
               title: e.target.value,
             });
           }}
-          placeholder = "Title"
+          placeholder="Title"
         />
-        <input type="date" value={task.dueDate} onChange={e => setTask({...task, dueDate: e.target.value})
-        } />
-        <textarea className="text-white" name="description" value={task.description} onChange={e => setTask({ ...task, description: e.target.value })} placeholder="Description..."></textarea>
-       
-        <div className="radio">
-          <input type="radio" value="low" name="priority" id="priority-low" checked={task.priority === "low"} onChange={e => setTask({...task, priority: e.target.value})} />
-          <label htmlFor="priority-low" className="text-white">Low</label>
-
-          <input type="radio" value="medium" name="priority" id="priority-medium" checked={task.priority === "medium"} onChange={e => setTask({...task, priority: e.target.value})} />
-          <label htmlFor="priority-medium" className="text-white">Medium</label>
-
-          <input type="radio" value="high" name="priority" id="priority-high" checked={task.priority === "high"} onChange={e => setTask({...task, priority: e.target.value})} />
-          <label htmlFor="priority-high" className="text-white">High</label>
-        </div>
-
-        <button type="submit" className="bg-white p-2 rounded">Submit</button>
-      </form>
-      <ul>
-        
-        {selectedList.map((task) => (
-          <li key={task.id}  style={{
-            textDecoration: task.completed ? "line-through" : "none",
-          }}>
+        <div className="flex gap-5 flex-col">
+          <label htmlFor="due-date" className="text-white mt-3">
+            Due Date:
+          </label>
+          <input
+            id="due-date"
+            className="text-white bg-dark rounded py-2 px-1"
+            type="date"
+            value={task.dueDate}
+            onChange={(e) => setTask({ ...task, dueDate: e.target.value })}
+          />
+          <label htmlFor="radio" className="text-white mt-3">
+            Priority:
+          </label>
+          <div id="radio">
             <input
-              type="checkbox"
-              onChange={() => {
-                setList(list.map(t => task.id === t.id ? {...t, completed: !t.completed} : t))
-              }}
-              checked={task.completed}
+              className="m-4"
+              type="radio"
+              value="low"
+              name="priority"
+              id="priority-low"
+              checked={task.priority === "low"}
+              onChange={(e) => setTask({ ...task, priority: e.target.value })}
             />
-            {task.title}{" "} prority: {task.priority} due date: {task.dueDate}
-            <p>{task.description}</p>
-            <button onClick={() => handleEdit(task.id)}>edit</button>
-            <button onClick={() => handleDelete(task.id)}>delete</button>
+            <label htmlFor="priority-low" className="text-white">
+              Low
+            </label>
+
+            <input
+              className="m-4"
+              type="radio"
+              value="medium"
+              name="priority"
+              id="priority-medium"
+              checked={task.priority === "medium"}
+              onChange={(e) => setTask({ ...task, priority: e.target.value })}
+            />
+            <label htmlFor="priority-medium" className="text-white">
+              Medium
+            </label>
+
+            <input
+              className="m-4"
+              type="radio"
+              value="high"
+              name="priority"
+              id="priority-high"
+              checked={task.priority === "high"}
+              onChange={(e) => setTask({ ...task, priority: e.target.value })}
+            />
+            <label htmlFor="priority-high" className="text-white">
+              High
+            </label>
+          </div>
+        </div>
+        <textarea
+          className="text-white bg-dark rounded py-2 px-1"
+          name="description"
+          value={task.description}
+          onChange={(e) => setTask({ ...task, description: e.target.value })}
+          placeholder="Description..."
+        ></textarea>
+
+        <button type="submit" className="font-medium bg-light-blue p-2 rounded">
+          Submit
+        </button>
+      </form>
+      <ul className="w-9/12 md:w-4/12 mb-4">
+        {selectedList.map((task) => (
+          <li className="rounded p-2 mb-4 bg-light" key={task.id}>
+            <div className="flex justify-between">
+              <span>
+                <input
+                  type="checkbox"
+                  onChange={() => {
+                    setList(
+                      list.map((t) =>
+                        task.id === t.id ? { ...t, completed: !t.completed } : t
+                      )
+                    );
+                  }}
+                  checked={task.completed}
+                />
+                <span
+                  style={{
+                    textDecoration: task.completed ? "line-through" : "none",
+                  }}
+                  className="text-2xl ml-2 font-semibold"
+                >
+                  {task.title}
+                </span>
+              </span>
+              <span>
+                <button
+                  className="font-medium bg-light-blue px-2 py-1 mr-2 rounded"
+                  onClick={() => handleEdit(task.id)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="font-medium bg-light-blue px-2 py-1 rounded"
+                  onClick={() => handleDelete(task.id)}
+                >
+                  Delete
+                </button>
+              </span>
+            </div>
+
+            <p className="text-dark mt-4">Prority: {task.priority}</p>
+            <p className="text-dark mb-4">Due Date: {task.dueDate}</p>
+            <p className="mb-4">{task.description}</p>
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }
 
